@@ -1,50 +1,80 @@
-# Elasticsearch_SDK_NodeJS_Example
+# Elasticsearch SDK — Node.js Examples
 
-**Repository Owner:** [Repository Owner Username Here]  
-**Last Updated:** [Last Update Date Here]
+<p align="center">
+  <img src="https://img.shields.io/badge/Node.js-20+-green?logo=node.js" alt="Node.js">
+  <img src="https://img.shields.io/badge/Elasticsearch-8.x-yellow?logo=elasticsearch" alt="Elasticsearch">
+  <img src="https://img.shields.io/badge/full--text%20search-examples-orange" alt="Search">
+  <img src="https://img.shields.io/badge/Docker-local%20cluster-blue?logo=docker" alt="Docker">
+  <img src="https://img.shields.io/badge/license-MIT-blue" alt="License">
+</p>
 
-## Overview
+A comprehensive collection of **Elasticsearch 8.x SDK examples in Node.js** — from basic CRUD to advanced full-text search, aggregations, fuzzy search, and geo-queries.
 
-This repository provides a working example of using Elasticsearch version 7.1.12 with Node.js, demonstrating essential operations like creating, deleting indexes, and managing documents. It aims to assist developers facing challenges due to scarce documentation for earlier versions of Elasticsearch's JavaScript SDK.
+---
 
-## Technologies Used
+## 📚 Examples Covered
 
-- **Elasticsearch 7.1.12**: Downgraded from 8.3.1 for its lighter resource consumption while retaining full functionality.
-- **Node.js**: JavaScript runtime environment to execute the backend code.
-- **@elastic/elasticsearch**: Official Elasticsearch client for Node.js.
+| Example | Description |
+|---------|-------------|
+| `01-basic-crud` | Index, get, update, delete documents |
+| `02-full-text-search` | `match`, `multi_match`, `query_string` |
+| `03-aggregations` | Terms, range, histogram, date histogram |
+| `04-fuzzy-search` | Typo-tolerant search with fuzziness |
+| `05-autocomplete` | Edge n-gram analyzer for suggestions |
+| `06-geo-queries` | `geo_distance`, `geo_bounding_box` |
+| `07-bulk-indexing` | High-throughput bulk API |
+| `08-scroll-api` | Paginate through large result sets |
 
-## Features
+---
 
-- **Index Management**: Functions to create and delete indices, handling scenarios where indices already exist.
-- **Document Management**: Capabilities to create and search documents within indices using regex and case-insensitive queries.
-- **Error Handling**: Uses a custom `ApiError` class to manage and throw errors effectively.
-- **Data Import**: Functionality to index JSON datasets directly from files.
+## 🚀 Quick Start
 
-## Code Highlights
+```bash
+# Start Elasticsearch locally
+docker-compose up -d
 
-- **Connection Setup**: Establishes a connection to the Elasticsearch server without requiring authentication, configurable via environment variables.
-- **Error Handling**: Incorporates a custom `ApiError` to standardize error management across different functions.
-- **Data Indexing**: Provides methods to index data from JSON files, manage documents by unique identifiers, and perform searches based on regular expressions.
+# Install and run
+npm install
+node examples/01-basic-crud.js
+```
 
-## Getting Started
+---
 
-To get this project running on your local machine:
+## 💡 Key Code Snippets
 
-1. Clone the repository.
-2. Ensure Elasticsearch 7.1.12 is installed and running on your system.
-3. Navigate to the project directory and install dependencies:
-   ```bash
-   npm install
-   '''
-4. Set up environment variables in a .env file with your Elasticsearch URL.
+### Full-Text Search
+```js
+const result = await client.search({
+  index: 'products',
+  query: {
+    multi_match: {
+      query: 'wireless headphones',
+      fields: ['title^3', 'description'],
+      fuzziness: 'AUTO',
+    }
+  },
+  highlight: { fields: { title: {}, description: {} } }
+});
+```
 
-## Execute the script:
+### Aggregation
+```js
+const result = await client.search({
+  index: 'products',
+  aggs: {
+    price_ranges: {
+      range: {
+        field: 'price',
+        ranges: [{ to: 50 }, { from: 50, to: 200 }, { from: 200 }]
+      }
+    }
+  },
+  size: 0
+});
+```
 
-node [filename.js]
+---
 
-## Contributing
+## 📄 License
 
-Contributions are welcome, especially from those who wish to extend functionality or improve documentation. Please fork this repository, make your changes, and submit a pull request for review.
-
-## License
-This project is open-source and available under standard licensing terms.
+MIT
